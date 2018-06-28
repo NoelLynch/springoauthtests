@@ -1,4 +1,4 @@
-package com.noeltest.client;
+package com.noeltest.resourceserver2;
 
 import java.util.Base64;
 
@@ -6,9 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class TestAuth {
-    private final static String AUTH_SERVER = "http://localhost:8081";
-    private final static String RES_SERVER = "http://localhost:8082";
+public class TestRes2Auth {
+    private final static String AUTH_SERVER = "http://localhost:8083";
+    private final static String RES1_SERVER = "http://localhost:8084";
+    private final static String RES2_SERVER = "http://localhost:8085";
     
     private final static ObjectMapper mapper = new ObjectMapper();
     
@@ -53,80 +54,54 @@ public class TestAuth {
     
     public static void main(String[] args) {
         try {
-            System.out.println("\n**************** test NO TOKEN");
-            FlUrl url = new FlUrl(RES_SERVER + "/test");
-            url.get();
-            System.out.println(url.getRespCode() + " : " + url.getContent());
-            
             String accToken = getToken("john", "123");
             
             System.out.println("\n**************** get user info");
-            url = new FlUrl(AUTH_SERVER + "/user/me");
+            FlUrl url = new FlUrl(AUTH_SERVER + "/user/me");
             url.oauth2(accToken);
             
             url.get();
             System.out.println(url.getRespCode());
             prettyPrint(url.getContent());
             
-            System.out.println("\n**************** test end point in auth service");
-            url = new FlUrl(AUTH_SERVER + "/user/hello");
+            System.out.println("\n**************** get res1 message WITH TOKEN");
+            url = new FlUrl(RES1_SERVER + "/res1/message");
             url.oauth2(accToken);
             url.get();
             System.out.println(url.getRespCode() + " : " + url.getContent());
             
-            System.out.println("\n**************** test");
-            url = new FlUrl(RES_SERVER + "/test");
+            System.out.println("\n**************** get res2 message WITH TOKEN");
+            url = new FlUrl(RES2_SERVER + "/res2/message");
             url.oauth2(accToken);
             url.get();
             System.out.println(url.getRespCode() + " : " + url.getContent());
             
-            System.out.println("\n**************** test with read perm");
-            url = new FlUrl(RES_SERVER + "/testREAD");
+            System.out.println("\n**************** get res2 user");
+            url = new FlUrl(RES2_SERVER + "/res2/user");
             url.oauth2(accToken);
             url.get();
             System.out.println(url.getRespCode() + " : " + url.getContent());
             
-            System.out.println("\n**************** test with write perm");
-            url = new FlUrl(RES_SERVER + "/testWRITE");
+            System.out.println("\n**************** get token from header");
+            url = new FlUrl(RES2_SERVER + "/res1/inspectHeader");
             url.oauth2(accToken);
             url.get();
             System.out.println(url.getRespCode() + " : " + url.getContent());
             
-            System.out.println("\n**************** test with USER auth");
-            url = new FlUrl(RES_SERVER + "/testREAD_auth");
+            System.out.println("\n**************** get res1 from res2 using header");
+            url = new FlUrl(RES2_SERVER + "/res1/res1messageWithHeader");
             url.oauth2(accToken);
             url.get();
             System.out.println(url.getRespCode() + " : " + url.getContent());
             
-            System.out.println("\n**************** test with ADMIN auth");
-            url = new FlUrl(RES_SERVER + "/testADMIN_auth");
-            url.oauth2(accToken);
-            url.get();
-            System.out.println(url.getRespCode() + " : " + url.getContent());
-            
-            accToken = getToken("tom", "123");
-            
-            System.out.println("\n**************** test with ADMIN auth");
-            url = new FlUrl(RES_SERVER + "/testADMIN_auth");
-            url.oauth2(accToken);
-            url.get();
-            System.out.println(url.getRespCode() + " : " + url.getContent());
-            
-            System.out.println("\n**************** test with USER auth");
-            url = new FlUrl(RES_SERVER + "/testREAD_auth");
-            url.oauth2(accToken);
-            url.get();
-            System.out.println(url.getRespCode() + " : " + url.getContent());
-            
-            System.out.println("\n**************** test get USER");
-            url = new FlUrl(RES_SERVER + "/getUser");
-            url.oauth2(accToken);
-            url.get();
-            System.out.println(url.getRespCode() + " : " + url.getContent());
+          System.out.println("\n**************** get res1 from res2");
+          url = new FlUrl(RES2_SERVER + "/res1/res1message");
+          url.oauth2(accToken);
+          url.get();
+          System.out.println(url.getRespCode() + " : " + url.getContent());
             
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }
