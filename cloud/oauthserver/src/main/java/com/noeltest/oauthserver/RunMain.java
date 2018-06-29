@@ -8,10 +8,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableResourceServer
-public class RunMain {
-
+public class RunMain {    
     public static void main(String[] args) {
         SpringApplication.run(RunMain.class, args);
     }
-
 }
