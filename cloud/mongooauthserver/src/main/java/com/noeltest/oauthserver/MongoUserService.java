@@ -6,6 +6,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
@@ -22,16 +23,21 @@ public class MongoUserService implements UserDetailsService {
     @Autowired
     private MongoTemplate mongo;
     
+    @Autowired
+    private Logger logger;
+    
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         return mongo.findOne(query(where("name").is(name)), AUser.class);
     }
     
     public void deleteAll() {
+        logger.info("clearing db");
         mongo.dropCollection(AUser.class);
     }
     
     public void createUser(String name, String pass, List<String> auths) {
+        logger.info("creating user " + name);
         AUser user = new AUser(name, pass);
         auths.forEach(user::addAuthority);
         mongo.save(user);
