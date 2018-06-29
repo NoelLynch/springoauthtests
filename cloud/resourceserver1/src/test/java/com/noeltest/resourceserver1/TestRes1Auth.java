@@ -65,7 +65,6 @@ public class TestRes1Auth {
             
             System.out.println("\n**************** get res1 message NO TOKEN");
             url = new FlUrl(RES_SERVER + "/res1/message");
-//            url.oauth2(accToken);
             url.get();
             System.out.println(url.getRespCode() + " : " + url.getContent());
             
